@@ -25,7 +25,7 @@
     footer {
         align-self: stretch; /*faz com que ele ocupe a largura toda do footer*/
 
-        &.empty {
+        &.empty .progress {
             opacity: 0.5;
         }
     }
@@ -107,7 +107,8 @@
         transition: filter 0.2s;
 
         &:disabled {
-            cursor: not-allowed; /*ou default*/
+            cursor: default; /*ou not-allowed*/
+            opacity: 0.5;
         }
 
         /*quando passar o mouse em cima de um botão que não está desabilitado*/
