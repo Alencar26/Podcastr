@@ -23,13 +23,15 @@ type Episode = {
 }
 
 type HomeProps = {
-	latesEpisodes: Array<Episode> // ou Episode[];
+	latestEpisodes: Array<Episode> // ou Episode[];
 	allEpisodes: Array<Episode>
 }
 
-export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
+export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 
-  	const { play } = useContext(PlayerContext)
+  	const { playList } = useContext(PlayerContext)
+
+	const episodeList = [...latestEpisodes, ...allEpisodes]
 
 	return (
 		<div className={styles.homepage}>
@@ -37,7 +39,7 @@ export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
 				<h2>Últimos lançamentos</h2>
 
 				<ul>
-					{latesEpisodes.map(episode => {
+					{latestEpisodes.map((episode, index) => {
 						return(
 							<li key={episode.id}>
 								<Image
@@ -58,7 +60,7 @@ export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
 								</div>
 
 								{/*dentro de REACT sempre que for usar o onclick deve-se passar um função que retorna uma função*/}
-								<button type="button" onClick={() => play(episode)}>
+								<button type="button" onClick={() => playList(episodeList, index)}>
 									<img src="/play-green.svg" alt="Tocar episódio"/>
 								</button>
 							</li>
@@ -82,7 +84,7 @@ export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
 						</tr>
 					</thead>
 					<tbody>
-						{allEpisodes.map(episode => {
+						{allEpisodes.map((episode, index) => {
 							return (
 								<tr key={episode.id}>
 									<td style={{ width: 72 }}>
@@ -103,7 +105,7 @@ export default function Home({ latesEpisodes, allEpisodes }: HomeProps) {
 									<td style={{ width: 100 }}>{episode.publishedAt}</td>
 									<td>{episode.durationAsString}</td>
 									<td>
-										<button type="button">
+										<button type="button" onClick={() => playList(episodeList, index + latestEpisodes.length)}>
 											<img src="/play-green.svg" alt="Tocar episódio"/>
 										</button>
 									</td>
@@ -140,12 +142,12 @@ export const getStaticProps: GetStaticProps = async () => {
 		}
 	})
 
-	const latesEpisodes = episodes.slice(0, 2); // da posição 0 me traga 2 episódios.
+	const latestEpisodes = episodes.slice(0, 2); // da posição 0 me traga 2 episódios.
 	const allEpisodes = episodes.slice(2, episodes.length); // a partir da posição 2 me traga o resto.
 
 	return {
 		props: { 
-			latesEpisodes,
+			latestEpisodes,
 			allEpisodes,
 		},
 		revalidate: 60 * 60 * 8,
